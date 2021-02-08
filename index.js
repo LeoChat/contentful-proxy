@@ -2,8 +2,10 @@ const LRUCache = require('lru-cache')
 const httpProxy = require('http-proxy')
 const { send, json, sendError } = require('micro')
 const config = require('./config.json')
+const qs = require('qs')
 
 const cache = new LRUCache({ maxAge: 1000 * 60 * 60 * 24 }) // cache for 1 day
+const allowedContentTypes = ['agent'];
 
 function createProxyFn(config) {
   const proxy = createContentfulProxy(config)
@@ -14,7 +16,19 @@ function createProxyFn(config) {
       send(res, 200)
       return
     }
-
+    
+    const match = req.url.match(/^\/entries\/?\?/);
+    if(!match){
+      send(res, 401, "Only '/entries' allowed");
+      return;
+    }
+    const [,queryString] = req.url.split('?');
+    const qsParsed = qs.parse(queryString);
+    if(!qsParsed.hasOwnProperty('content_type') || !allowedContentTypes.includes(qsParsed.content_type)){
+      send(res, 401, "Missing content_type or content_type value not allowed");
+      return;
+    }
+    
     if (cache.has(req.url)) {
       const cached = cache.get(req.url)
       addHeaders(res, cached.headers)
