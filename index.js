@@ -100,4 +100,18 @@ function handleError(err, req, res) {
   sendError(req, res, err)
 }
 
-module.exports = createProxyFn(config)
+const spaceId = process.env.CONTENTFUL_SPACE_ID;
+if(!spaceId){
+  throw new Error('Missing process.env.CONTENTFUL_SPACE_ID');
+}
+const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
+if(!accessToken){
+  throw new Error('Missing process.env.CONTENTFUL_ACCESS_TOKEN');
+}
+module.exports = createProxyFn({
+  spaceId,
+  accessToken,
+  //previewToken
+  preview: false,
+  secure: true
+})
