@@ -5,8 +5,11 @@ const { send, json, sendError } = require('micro')
 const qs = require('qs')
 const route = require('micro-route')
 
-const cache = new LRUCache({ maxAge: 1000 * 60 * 60 * 24 }) // cache for 1 day
-const allowedContentTypes = ['webchatFeature'];
+const maxAge = process.env.CACHE_EXPIRATION_IN_MINUTES ?
+  parseInt(process.env.CACHE_EXPIRATION_IN_MINUTES) * 1000 * 60 :
+  1000 * 60; // cache for 1 minute
+const cache = new LRUCache({ maxAge: maxAge })
+const allowedContentTypes = ['webchatFeature', 'insightsTips'];
 const healthcheckRoute = route('/healthcheck', ['GET'])
 
 function createProxyFn(config) {
@@ -38,6 +41,7 @@ function createProxyFn(config) {
     if (cache.has(req.url)) {
       const cached = cache.get(req.url)
       addHeaders(res, cached.headers)
+      res.setHeader('X-Hit-From-Cache', "1")
       send(res, 200, cached.data)
       return
     }
