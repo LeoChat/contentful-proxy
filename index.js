@@ -1,16 +1,22 @@
 const LRUCache = require('lru-cache')
 const httpProxy = require('http-proxy')
 const { send, json, sendError } = require('micro')
-const config = require('./config.json')
+//const config = require('./config.json')
 const qs = require('qs')
+const route = require('micro-route')
 
 const cache = new LRUCache({ maxAge: 1000 * 60 * 60 * 24 }) // cache for 1 day
-const allowedContentTypes = ['agent'];
+const allowedContentTypes = ['webchatFeature'];
+const healthcheckRoute = route('/healthcheck', ['GET'])
 
 function createProxyFn(config) {
   const proxy = createContentfulProxy(config)
 
   return (req, res) => {
+    if(healthcheckRoute(req)){
+      send(res, 200, "OK")
+      return
+    }
     if (req.method === 'DELETE') {
       clearCache()
       send(res, 200)

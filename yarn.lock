@@ -1541,6 +1541,13 @@ meow@^3.4.2:
     redent "^1.0.0"
     trim-newlines "^1.0.0"
 
+micro-route@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/micro-route/-/micro-route-2.5.0.tgz#4d966b7c9803bbfe085f5e5514389be2d736e5d3"
+  integrity sha512-JgKJh2ewx/XSBlwMItzx1b8Jum7AOft8JorAl9zf8BVyw4Y1LDb6m92nGGcVNptzGpu6MH7zBhwIlwBJlzS4uw==
+  dependencies:
+    url-pattern "^1.0.3"
+
 micro@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/micro/-/micro-6.1.0.tgz#c933e1dd90dea56b0517b62b2af00d3f5351d79d"
@@ -2424,6 +2431,11 @@ url-parse-lax@^3.0.0:
   integrity sha1-FrXK/Afb42dsGxmZF3gj1lA6yww=
   dependencies:
     prepend-http "^2.0.0"
+
+url-pattern@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/url-pattern/-/url-pattern-1.0.3.tgz#0409292471b24f23c50d65a47931793d2b5acfc1"
+  integrity sha1-BAkpJHGyTyPFDWWkeTF5PStaz8E=
 
 user-home@^2.0.0:
   version "2.0.0"
