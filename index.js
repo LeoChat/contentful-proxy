@@ -9,7 +9,7 @@ const maxAge = process.env.CACHE_EXPIRATION_IN_MINUTES ?
   parseInt(process.env.CACHE_EXPIRATION_IN_MINUTES) * 1000 * 60 :
   1000 * 60; // cache for 1 minute
 const cache = new LRUCache({ maxAge: maxAge })
-const allowedContentTypes = ['webchatFeature', 'insightsTips', 'agent'];
+const allowedContentTypes = ['webchatFeature', 'insightsTips', 'insightsReports', 'tipsCategory', 'reportCategory', 'agent'];
 const healthcheckRoute = route('/healthcheck', ['GET'])
 
 function createProxyFn(config) {
@@ -25,7 +25,7 @@ function createProxyFn(config) {
       send(res, 200)
       return
     }
-    
+
     const match = req.url.match(/^\/entries\/?\?/);
     if(!match){
       send(res, 400, "Only '/entries' allowed");
@@ -37,7 +37,7 @@ function createProxyFn(config) {
       send(res, 400, "Missing content_type or content_type value not allowed");
       return;
     }
-    
+
     if (cache.has(req.url)) {
       const cached = cache.get(req.url)
       addHeaders(res, cached.headers)
